@@ -67,7 +67,7 @@ def formatting_check12hr_american(input):
 
 #def parse_and_print(f_name):
 
-f_name='TemperatureAB.csv'
+f_name='Temperature_voltage_gamma.csv'
 index = pd.read_csv(f_name,nrows = 0, delimiter =" ")
 df = pd.read_csv(f_name,skiprows=1 ,delimiter="\t")
 
@@ -103,14 +103,34 @@ if isinstance(varB[0],str):
     varB[:] = varB.replace(',','.', regex=True)
     varB[:]=varB.astype(float)
 
-
+varA_average = varA.mean() 
+varB_average = varB.mean() 
+avg_diff = abs(varA_average - varB_average)
 #decide if both column A and B contain valid values that can be plotted
 if 'varB'in globals() and not math.isnan(varA[0]) and not math.isnan(varB[0]):
-    plt.ylabel(col[1]+'   '+ col[2])
-    plt.plot(dates,varA)
-    plt.plot(dates,varB)
-    plt.xlabel('Dates')
-    plt.xticks(rotation=45)
+    if avg_diff > 200:
+        fig, ax1 = plt.subplots()
+        ax1.set_ylabel(col[1])
+        ax1.plot(dates,varA)
+        
+        ax2 = ax1.twinx()
+        ax2.set_ylabel(col[2])
+        ax2.plot(dates,varB)
+        #fig.thight_layout()
+        plt.xlabel('Dates')
+        plt.xticks(rotation=45)
+        #plt.show()
+        
+    else:
+        plt.ylabel(col[1]+'   '+ col[2])
+        plt.plot(dates,varA)
+        plt.plot(dates,varB)
+        plt.xlabel('Dates')
+        plt.xticks(rotation=45)
+    
+    
+
+
     
 elif not math.isnan(varA[0]):
     plt.ylabel(col[1])
