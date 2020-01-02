@@ -19,7 +19,7 @@ from os import scandir
 import os
 from pathlib import Path
 import math
-
+import matplotlib
 
 #function to check if csv date is in 24 hr and european style format
 def formatting_check24hr_nor(input):
@@ -111,15 +111,27 @@ if 'varB'in globals() and not math.isnan(varA[0]) and not math.isnan(varB[0]):
     if avg_diff > 200:
         fig, ax1 = plt.subplots()
         ax1.set_ylabel(col[1])
-        ax1.plot(dates,varA)
+      
+        lns1 = ax1.plot(dates,varA,label=col[1], color='C0')
         
+        
+        
+        for ax1 in fig.axes:
+            plt.sca(ax1)
+            plt.xticks(rotation=45)
+            plt.xlabel('Dates')
+            
         ax2 = ax1.twinx()
         ax2.set_ylabel(col[2])
-        ax2.plot(dates,varB)
-        #fig.thight_layout()
-        plt.xlabel('Dates')
-        plt.xticks(rotation=45)
-        #plt.show()
+        lns2 = ax2.plot(dates,varB,label=col[2], color='C1')
+        
+        lns = lns1+lns2
+        labs = [l.get_label() for l in lns]
+        ax1.legend(lns,labs,loc=0)
+       
+        
+        
+        
         
     else:
         plt.ylabel(col[1]+'   '+ col[2])
